@@ -1,4 +1,4 @@
-name: Deploy static frontend to Azure Web App - cw2-webapp-aaronnoade
+name: Deploy static frontend to Azure Web App
 
 on:
   push:
@@ -9,15 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
 
-      # Upload ONLY the static frontend folder
-      - name: Upload frontend artifact
-        uses: actions/upload-artifact@v4
+      # Upload ONLY the frontend folder (static files)
+      - name: Upload artifact
+      - uses: actions/upload-artifact@v4
         with:
           name: site
           path: frontend
@@ -30,7 +27,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Download frontend artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: site
@@ -39,19 +36,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CE144D215D694C9B9C75C2ABFFEADE60 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EB18BC0535A340B59A24E7FDC4E0603C }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3D9D0D00E8334EA78DFCE58F59B93160 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: cw2-webapp-aaronnoade
-          slot-name: Production
           package: frontend
 
-          app-name: 'cw2-webapp-aaronnoade'
-          slot-name: 'Production'
-          package: .
-
           
+
